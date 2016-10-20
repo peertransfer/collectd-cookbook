@@ -56,7 +56,7 @@ module CollectdCookbook
             value.map do |val|
               if val.is_a?(String)
                 %(#{tabs}#{key} "#{val}")
-              elsif value.kind_of?(Hash)
+              elsif val.kind_of?(Hash)
                 write_elements(val, indent)
               else
                 %(#{tabs}#{key} #{val})
