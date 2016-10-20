@@ -54,7 +54,11 @@ module CollectdCookbook
           key = snake_to_camel(key)
           if value.is_a?(Array)
             value.map do |val|
-              write_elements(val, indent)
+              if val.is_a?(String)
+                %(#{tabs}#{key} "#{val}")
+              else
+                %(#{tabs}#{key} #{val})
+              end
             end.join("\n")
           elsif value.kind_of?(Hash) # rubocop:disable Style/ClassCheck
             id = value.delete('id')
