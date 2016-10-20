@@ -43,6 +43,11 @@ module CollectdCookbook
       # @return [Hash, Mash]
       attribute(:options, option_collector: true)
 
+      # @!attribute plugin_options
+      # Set of key-value plugin_options to configure the plugin.
+      # @return [Hash, Mash]
+      attribute(:plugin_options, option_collector: true)
+
       # @return [String]
       def config_filename
         ::File.join(directory, "#{plugin_name}.conf")
@@ -61,7 +66,13 @@ module CollectdCookbook
             owner new_resource.user
             group new_resource.group
             configuration(
-              'load_plugin' => new_resource.plugin_name,
+              'load_plugin' => if new_resource.plugin_options
+                                 {
+                                   'id' => new_resource.plugin_name
+                                 }.merge(new_resource.plugin_options)
+                               else
+                                 new_resource.plugin_name
+                               end,
               'plugin' => {
                 'id' => new_resource.plugin_name
               }.merge(new_resource.options)
