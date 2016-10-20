@@ -56,6 +56,13 @@ module CollectdCookbook
             value.map do |val|
               if val.is_a?(String)
                 %(#{tabs}#{key} "#{val}")
+              elsif val.is_a?(Hash)
+                id = val.delete('id')
+                next if id.nil?
+                [%(#{tabs}<#{key} "#{id}">),
+                 write_elements(val, indent.next),
+                 %(#{tabs}</#{key}>)
+                ].join("\n")
               else
                 %(#{tabs}#{key} #{val})
               end
